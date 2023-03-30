@@ -55,7 +55,6 @@ app.post("/send/msg", async (req, res) => {
   const appsecret = "ad4be3ffac458ea7e9a567e6a9caf379";
   const url = `https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=${appid}&secret=${appsecret}`;
   const tokenResult = await getToken(url);
-  console.log("[no class] [no function] [tokenResult]", tokenResult);
   res.send({
     code: 0,
     data: tokenResult,
