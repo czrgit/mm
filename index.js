@@ -51,7 +51,7 @@ app.get("/api/wx_openid", async (req, res) => {
 });
 
 app.post("/send/msg", async (req, res) => {
-  const tokenResult = await getToken(url);
+  const tokenResult = await getToken();
   const data = {
     date: {
       value: "test",
