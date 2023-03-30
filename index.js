@@ -100,7 +100,7 @@ async function postTemplate(url, data) {
       {
         url,
         method: "POST",
-        data,
+        body: JSON.stringify(data),
       },
       function (error, res) {
         if (error) reject(error);
