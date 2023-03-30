@@ -55,9 +55,29 @@ app.post("/send/msg", async (req, res) => {
   const appsecret = "ad4be3ffac458ea7e9a567e6a9caf379";
   const url = `https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=${appid}&secret=${appsecret}`;
   const tokenResult = await getToken(url);
+  const url2 =
+    "https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=" +
+    tokenResult.access_token;
+  const data = {
+    touser: "oXARP5tzMtKEOHDmsmszDOzDCaFc-W9FoxdLM",
+    template_id: "bSXjlbsyFCJqAN0LS0QtyIhST1kajhX_1I-W9FoxdLM",
+    url: "http://weixin.qq.com/download",
+    topcolor: "#FF0000",
+    data: {
+      date: {
+        value: "147",
+      },
+    },
+  };
+  const Result = await postTemplate(url2, data);
+  console.log("[no class] [no function] [Result]", Result);
+  console.log(
+    "[no class] [no function] [tokenResult]",
+    tokenResult.access_token
+  );
   res.send({
     code: 0,
-    data: tokenResult,
+    data: { tokenResult, Result },
   });
 });
 async function getToken(url) {
@@ -74,7 +94,21 @@ async function getToken(url) {
     );
   });
 }
-
+async function postTemplate(url, data) {
+  return new Promise((resolve, reject) => {
+    request(
+      {
+        url,
+        method: "POST",
+        data,
+      },
+      function (error, res) {
+        if (error) reject(error);
+        resolve(res.body);
+      }
+    );
+  });
+}
 const port = process.env.PORT || 80;
 
 async function bootstrap() {
