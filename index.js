@@ -1,5 +1,6 @@
 const path = require("path");
 const express = require("express");
+const request = require("request");
 const cors = require("cors");
 const morgan = require("morgan");
 const { init: initDB, Counter } = require("./db");
@@ -48,6 +49,32 @@ app.get("/api/wx_openid", async (req, res) => {
     res.send(req.headers["x-wx-openid"]);
   }
 });
+
+app.post("/send/msg", async (req, res) => {
+  const appid = "wxf77684cd83c932c0";
+  const appsecret = "ad4be3ffac458ea7e9a567e6a9caf379";
+  const url = `https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=${appid}&secret=${appsecret}`;
+  const tokenResult = await getToken(url);
+  console.log("[no class] [no function] [tokenResult]", tokenResult);
+  res.send({
+    code: 0,
+    data: tokenResult,
+  });
+});
+async function getToken(url) {
+  return new Promise((resolve, reject) => {
+    request(
+      {
+        url,
+        method: "GET",
+      },
+      function (error, res) {
+        if (error) reject(error);
+        resolve(res.body);
+      }
+    );
+  });
+}
 
 const port = process.env.PORT || 80;
 
