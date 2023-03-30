@@ -51,25 +51,14 @@ app.get("/api/wx_openid", async (req, res) => {
 });
 
 app.post("/send/msg", async (req, res) => {
-  const appid = "wxf77684cd83c932c0";
-  const appsecret = "ad4be3ffac458ea7e9a567e6a9caf379";
-  const url = `https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=${appid}&secret=${appsecret}`;
   const tokenResult = await getToken(url);
-  const url2 =
-    "https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=" +
-    tokenResult.access_token;
   const data = {
-    touser: "oXARP5tzMtKEOHDmsmszDOzDCaFc-W9FoxdLM",
-    template_id: "bSXjlbsyFCJqAN0LS0QtyIhST1kajhX_1I-W9FoxdLM",
-    url: "http://weixin.qq.com/download",
-    topcolor: "#FF0000",
-    data: {
-      date: {
-        value: "147",
-      },
+    date: {
+      value: "test",
     },
   };
-  const Result = await postTemplate(url2, data);
+  const Result = await postTemplate(tokenResult.access_token, data);
+
   console.log("[no class] [no function] [Result]", Result);
   console.log(
     "[no class] [no function] [tokenResult]",
@@ -80,7 +69,10 @@ app.post("/send/msg", async (req, res) => {
     data: { tokenResult, Result },
   });
 });
-async function getToken(url) {
+async function getToken() {
+  const appid = "wxf77684cd83c932c0";
+  const appsecret = "ad4be3ffac458ea7e9a567e6a9caf379";
+  const url = `https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=${appid}&secret=${appsecret}`;
   return new Promise((resolve, reject) => {
     request(
       {
@@ -94,13 +86,23 @@ async function getToken(url) {
     );
   });
 }
-async function postTemplate(url, data) {
+async function postTemplate(token, data) {
+  const url =
+    "https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=" +
+    token;
+  const template = {
+    touser: "oXARP5tzMtKEOHDmsmszDOzDCaFc",
+    template_id: "bSXjlbsyFCJqAN0LS0QtyIhST1kajhX_1I-W9FoxdLM",
+    url: "http://weixin.qq.com/download",
+    topcolor: "#FF0000",
+    data,
+  };
   return new Promise((resolve, reject) => {
     request(
       {
         url,
         method: "POST",
-        body: JSON.stringify(data),
+        body: JSON.stringify(template),
       },
       function (error, res) {
         if (error) reject(error);
