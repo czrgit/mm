@@ -89,7 +89,7 @@ async function getToken(url) {
       },
       function (error, res) {
         if (error) reject(error);
-        resolve(res.body);
+        resolve(JSON.parse(res.body));
       }
     );
   });
